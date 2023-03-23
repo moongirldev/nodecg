@@ -372,7 +372,7 @@ test.serial('should reject mutations if they were validated against a different 
 					rep.schemaSum = 'baz';
 					try {
 						rep.value.object.numA = 1;
-					} catch (e: any) {
+					} catch (error) {
 						resolve(e.message);
 					}
 				});

@@ -52,6 +52,7 @@ export default class SentryConfig {
 		});
 
 		// Render a pre-configured Sentry instance for client pages that request it.
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		app.get('/sentry.js', authCheck, (_req, res) => {
 			res.type('.js');
 			res.render(path.join(VIEWS_PATH, 'sentry.js.tmpl'), {

@@ -224,7 +224,7 @@ export default function (cfgDirOrFile: string) {
 	let isDir = false;
 	try {
 		isDir = fs.lstatSync(cfgDirOrFile).isDirectory();
-		// eslint-disable-next-line @typescript-eslint/no-implicit-any-catch
+		 
 	} catch (error: any) {
 		if (error.code !== 'ENOENT') {
 			// eslint-disable-next-line @typescript-eslint/no-throw-literal

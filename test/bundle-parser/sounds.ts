@@ -65,7 +65,7 @@ test('should throw an error when pkg.nodecg.soundCues is not an Array', (t) => {
 	const error = t.throws(() =>
 		parseSounds(__dirname, {
 			name: 'test-bundle',
-			// @ts-expect-error
+			// @ts-expect-error - We're testing what happens when soundCues is not an Array
 			soundCues: 'foo',
 		}),
 	);
@@ -78,7 +78,7 @@ test('should throw an error when a soundCue lacks a name', (t) => {
 	const error = t.throws(() =>
 		parseSounds(__dirname, {
 			name: 'test-bundle',
-			// @ts-expect-error
+			// @ts-expect-error - We're testing what happens when a soundCue lacks a name
 			soundCues: [{}],
 		}),
 	);

@@ -43,6 +43,7 @@ export const setup = () => {
 		for (const page of await browser.pages()) {
 			let coverageObj: Record<string, any>;
 			try {
+				// eslint-disable-next-line @typescript-eslint/no-loop-func
 				coverageObj = await page.evaluate(() => window.__coverage__);
 			} catch (_) {
 				continue;

@@ -45,7 +45,7 @@ export class TypedEmitter<T extends EventMap> {
 	}
 
 	listeners<K extends EventKey<T & Builtins>>(eventName: K): Array<(T & Builtins)[K]> {
-		return this._emitter.listeners(eventName) as any;
+		return this._emitter.listeners(eventName);
 	}
 
 	// We intentionally don't expose removeAllListeners because it would break Replicants when used.

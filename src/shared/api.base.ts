@@ -2,7 +2,6 @@
 import type { DeepReadonly } from 'ts-essentials';
 
 // Ours
-const { version } = require('../../package.json');
 import type { AbstractReplicant } from './replicants.shared';
 import type { NodeCG } from '../types/nodecg';
 import { TypedEmitter, type EventMap } from './typed-emitter';
@@ -18,8 +17,6 @@ export abstract class NodeCGAPIBase<
 	C extends Record<string, any>,
 	E extends EventMap,
 > extends TypedEmitter<E> {
-	static version = version;
-
 	/**
 	 * An object containing references to all Replicants that have been declared in this `window`, sorted by bundle.
 	 * E.g., `NodeCG.declaredReplicants.myBundle.myRep`

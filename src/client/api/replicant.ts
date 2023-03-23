@@ -15,8 +15,7 @@ const REPLICANT_HANDLER = {
 	get(target: ClientReplicant<any>, prop: keyof ClientReplicant<any>) {
 		if (prop === 'value' && target.status !== 'declared') {
 			target.log.warn(
-				'Attempted to get value before Replicant had finished declaring. ' +
-					'This will always return undefined.',
+				'Attempted to get value before Replicant had finished declaring. ' + 'This will always return undefined.',
 			);
 		}
 
@@ -132,7 +131,7 @@ export default class ClientReplicant<
 					this._flushOperations();
 				}, 0);
 			} else {
-				this._queueAction(this._flushOperations);
+				this._queueAction(this._flushOperations.bind(this));
 			}
 		}
 	}
@@ -231,11 +230,7 @@ export default class ClientReplicant<
 						throw new Error('data unexpectedly falsey');
 					}
 
-					this.log.replicants(
-						'declareReplicant callback (value: %s, revision: %s)',
-						data.value,
-						data.revision,
-					);
+					this.log.replicants('declareReplicant callback (value: %s, revision: %s)', data.value, data.revision);
 					this.status = 'declared';
 
 					/* If the revision we get in the response doesn't match the revision we have locally,

@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/prefer-for-of */
-
 // Packages
 import clone from 'clone';
 import { JsonPointer } from 'json-ptr';
 
 // Crimes
-import jsonSchemaLibTypeOf = require('json-schema-lib/lib/util/typeOf');
-import jsonSchemaStripHash = require('json-schema-lib/lib/util/stripHash');
+import jsonSchemaLibTypeOf from 'json-schema-lib/lib/util/typeOf';
+import jsonSchemaStripHash from 'json-schema-lib/lib/util/stripHash';
 
 type File = {
 	url: string;
@@ -71,6 +69,7 @@ export default function replaceRefs(inputObj: unknown, currentFile: File, allFil
 
 			// Crawl this POJO or Array, looking for nested JSON References
 			const keys = Object.keys(dereferencedData);
+			// eslint-disable-next-line @typescript-eslint/prefer-for-of
 			for (let i = 0; i < keys.length; i++) {
 				const key = keys[i];
 				const value = obj[key];
@@ -81,6 +80,7 @@ export default function replaceRefs(inputObj: unknown, currentFile: File, allFil
 
 	// Crawl this POJO or Array, looking for nested JSON References
 	const keys = Object.keys(obj);
+	// eslint-disable-next-line @typescript-eslint/prefer-for-of
 	for (let i = 0; i < keys.length; i++) {
 		const key = keys[i];
 		const value = obj[key];

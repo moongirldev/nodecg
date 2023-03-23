@@ -55,3 +55,6 @@ tmp_node_modules
 
 # release asset
 /*.tgz
+
+# cache
+.eslintcache

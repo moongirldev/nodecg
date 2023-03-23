@@ -104,9 +104,9 @@ class NcgDialog extends mixinBehaviors([NeonAnimationRunnerBehavior, PaperDialog
 	ready(): void {
 		super.ready();
 
-		this.addEventListener('neon-animation-finish', this._onNeonAnimationFinish);
-		this.addEventListener('iron-overlay-opened', this._onIronOverlayOpened);
-		this.addEventListener('iron-overlay-closed', this._onIronOverlayClosed);
+		this.addEventListener('neon-animation-finish', this._onNeonAnimationFinish.bind(this));
+		this.addEventListener('iron-overlay-opened', this._onIronOverlayOpened.bind(this));
+		this.addEventListener('iron-overlay-closed', this._onIronOverlayClosed.bind(this));
 
 		afterNextRender(this, async () => {
 			const iframe = this.querySelector('iframe')!;

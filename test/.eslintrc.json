@@ -1,0 +1,4 @@
+{
+	"extends": ["plugin:ava/recommended"],
+	"parserOptions": { "project": "./test/tsconfig.json" }
+}

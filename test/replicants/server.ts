@@ -50,7 +50,7 @@ test.serial('should be readable without subscription, via readReplicant', (t) =>
 
 test.serial('should throw an error when no name is provided', (t) => {
 	const error = t.throws(() => {
-		// @ts-expect-error
+		// @ts-expect-error - We're testing what happens when no name is provided.
 		t.context.apis.extension.Replicant();
 	});
 
@@ -397,7 +397,7 @@ test.serial('transient - should not write their value to disk', async (t) => {
 
 test.serial('should return true when deleting a non-existing property', (t) => {
 	const rep = t.context.apis.extension.Replicant('serverDeleteNonExistent', { defaultValue: {} });
-	// @ts-expect-error
+	// @ts-expect-error - We're testing the behavior of deleting a non-existent property.
 	t.true(delete rep.value.nonExistent);
 });
 

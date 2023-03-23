@@ -1,7 +1,3 @@
-// Native
-import fs from 'fs';
-import path from 'path';
-
 // Packages
 import type { TestFn } from 'ava';
 import anyTest from 'ava';
@@ -15,7 +11,6 @@ const test = anyTest as TestFn<browser.BrowserContext & server.ServerContext>;
 server.setup();
 const { initDashboard } = browser.setup();
 
-import * as C from '../helpers/test-constants';
 import type { NodeCG } from '../../src/types/nodecg';
 import { getConnection, Replicant } from '../../src/server/database';
 
@@ -76,7 +71,7 @@ test.serial('should throw an error when no name is provided', async (t) => {
 		async () =>
 			new Promise((resolve) => {
 				try {
-					// @ts-expect-error
+					// @ts-expect-error - We're testing what happens when no name is provided.
 					window.dashboardApi.Replicant();
 				} catch (e: any) {
 					resolve(e.message);
@@ -618,8 +613,6 @@ test.serial('persistent - should persist assignment to disk', async (t) => {
 
 test('persistent - should persist changes to disk', async (t) => {
 	t.plan(1);
-
-	const serverRep = t.context.apis.extension.Replicant('clientChangePersistence', { defaultValue: { nested: '' } });
 
 	await dashboard.evaluate(
 		async () =>

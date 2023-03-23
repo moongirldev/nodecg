@@ -7,6 +7,7 @@ declare global {
 		 * adding one's User type to the Request object
 		 * when using Express with Passport.
 		 */
+		// eslint-disable-next-line @typescript-eslint/no-empty-interface
 		interface User extends NodeCGUser {}
 	}
 }

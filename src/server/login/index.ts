@@ -12,6 +12,8 @@ import { TypeormStore } from 'connect-typeorm';
 import cookieParser from 'cookie-parser';
 import appRootPath from 'app-root-path';
 import fetch from 'node-fetch-commonjs';
+import passportTwitch from 'passport-twitch-helix';
+import passportDiscord from 'passport-discord';
 
 // Ours
 import { config } from '../config';
@@ -38,18 +40,6 @@ type TwitchProfile = {
 	email: string;
 };
 
-/**
- * The "user profile" for Discord-authenticated users, as consumed by Express.
- */
-type DiscordProfile = {
-	provider: 'discord';
-	accessToken: string;
-	username: string;
-	discriminator: string;
-	id: string;
-	guilds: Array<{ id: string; name: string }>;
-};
-
 const log = createLogger('login');
 const protocol = config.ssl?.enabled ?? config.login.forceHttpsReturn ? 'https' : 'http';
 
@@ -58,12 +48,10 @@ const protocol = config.ssl?.enabled ?? config.login.forceHttpsReturn ? 'https' 
 passport.serializeUser<User['id']>((user, done) => {
 	done(null, user.id);
 });
-passport.deserializeUser<User['id']>(async (id, done) => {
-	try {
-		done(null, await findUser(id));
-	} catch (error: unknown) {
-		done(error);
-	}
+passport.deserializeUser<User['id']>((id, done) => {
+	findUser(id)
+		.then((user) => done(null, user))
+		.catch((error) => done(error));
 });
 
 if (config.login.steam?.enabled) {
@@ -93,7 +81,6 @@ if (config.login.steam?.enabled) {
 					});
 					done(undefined, user);
 					return;
-					// eslint-disable-next-line @typescript-eslint/no-implicit-any-catch
 				} catch (error: any) {
 					done(error);
 				}
@@ -103,7 +90,7 @@ if (config.login.steam?.enabled) {
 }
 
 if (config.login.twitch?.enabled) {
-	const TwitchStrategy = require('passport-twitch-helix').Strategy;
+	const TwitchStrategy = passportTwitch.Strategy;
 
 	// The "user:read:email" scope is required. Add it if not present.
 	const scopesArray = config.login.twitch.scope.split(' ');
@@ -145,7 +132,6 @@ if (config.login.twitch?.enabled) {
 					});
 					done(undefined, user);
 					return;
-					// eslint-disable-next-line @typescript-eslint/no-implicit-any-catch
 				} catch (error: any) {
 					done(error);
 				}
@@ -173,7 +159,7 @@ async function makeDiscordAPIRequest(
 }
 
 if (config.login.discord?.enabled) {
-	const DiscordStrategy = require('passport-discord').Strategy;
+	const DiscordStrategy = passportDiscord.Strategy;
 
 	// The "identify" scope is required. Add it if not present.
 	const scopeArray = config.login.discord.scope.split(' ');
@@ -195,7 +181,7 @@ if (config.login.discord?.enabled) {
 				callbackURL: `${protocol}://${config.baseURL}/login/auth/discord`,
 				scope,
 			},
-			async (accessToken: string, refreshToken: string, profile: DiscordProfile, done: StrategyDoneCb) => {
+			async (accessToken, refreshToken, profile, done) => {
 				if (!config.login.discord) {
 					// Impossible but TS doesn't know that.
 					done(new Error('Discord login config was impossibly undefined.'));
@@ -209,7 +195,7 @@ if (config.login.discord?.enabled) {
 				} else if (config.login.discord.allowedGuilds) {
 					// Get guilds that are specified in the config and that user is in
 					const intersectingGuilds = config.login.discord.allowedGuilds.filter((allowedGuild) =>
-						profile.guilds.some((profileGuild) => profileGuild.id === allowedGuild.guildID),
+						profile.guilds?.some((profileGuild) => profileGuild.id === allowedGuild.guildID),
 					);
 
 					const guildRequests = [];
@@ -230,9 +216,7 @@ if (config.login.discord?.enabled) {
 							if (err) {
 								log.warn(
 									`Got error while trying to get guild ${guildWithRoles.guildID} ` +
-										`(Make sure you're using the correct bot token and guild id): ${JSON.stringify(
-											memberResponse,
-										)}`,
+										`(Make sure you're using the correct bot token and guild id): ${JSON.stringify(memberResponse)}`,
 								);
 								continue;
 							}
@@ -252,20 +236,10 @@ if (config.login.discord?.enabled) {
 
 				const roles: Role[] = [];
 				if (allowed) {
-					log.info(
-						'(Discord) Granting %s#%s (%s) access',
-						profile.username,
-						profile.discriminator,
-						profile.id,
-					);
+					log.info('(Discord) Granting %s#%s (%s) access', profile.username, profile.discriminator, profile.id);
 					roles.push(await getSuperUserRole());
 				} else {
-					log.info(
-						'(Discord) Denying %s#%s (%s) access',
-						profile.username,
-						profile.discriminator,
-						profile.id,
-					);
+					log.info('(Discord) Denying %s#%s (%s) access', profile.username, profile.discriminator, profile.id);
 				}
 
 				const user = await upsertUser({
@@ -299,9 +273,7 @@ if (config.login.local?.enabled) {
 			async (username: string, password: string, done: StrategyDoneCb) => {
 				try {
 					const roles: Role[] = [];
-					const foundUser = allowedUsers?.find(
-						(u: { username: string; password: string }) => u.username === username,
-					);
+					const foundUser = allowedUsers?.find((u: { username: string; password: string }) => u.username === username);
 					let allowed = false;
 
 					if (foundUser) {
@@ -330,7 +302,6 @@ if (config.login.local?.enabled) {
 					});
 					done(undefined, user);
 					return;
-					// eslint-disable-next-line @typescript-eslint/no-implicit-any-catch
 				} catch (error: any) {
 					done(error);
 				}

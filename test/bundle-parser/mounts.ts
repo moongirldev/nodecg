@@ -11,7 +11,7 @@ test('returns an empty array if a bundle has no mounts', (t) => {
 
 test("throws if a bundle's `nodecg.mount` property is defined, not an array", (t) => {
 	const error = t.throws(() => {
-		// @ts-expect-error
+		// @ts-expect-error - We're testing an invalid value
 		parseMounts({ name: 'test-bundle', mount: 'foo' });
 	});
 	if (!error) return t.fail();
@@ -23,7 +23,7 @@ test("throws if a bundle's `nodecg.mount` property is defined, not an array", (t
 
 test('throws when required properties are missing from a mount declaration', (t) => {
 	const error = t.throws(() => {
-		// @ts-expect-error
+		// @ts-expect-error - We're testing an invalid value
 		parseMounts({ name: 'test-bundle', mount: [{}] });
 	});
 	if (!error) return t.fail();

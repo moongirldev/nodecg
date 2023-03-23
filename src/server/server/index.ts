@@ -30,8 +30,11 @@ if (config.sentry?.enabled) {
 }
 
 // Native
-import fs = require('fs');
-import path = require('path');
+import fs from 'fs'
+import path from 'path'
+import http from 'http'
+import https from 'https'
+import httpolyglot from 'httpolyglot'
 
 // Packages
 import bodyParser from 'body-parser';
@@ -116,10 +119,10 @@ export default class NodeCGServer extends TypedEmitter<EventMap> {
 			// If we allow HTTP on the same port, use httpolyglot
 			// otherwise, standard https server
 			server = config.ssl.allowHTTP
-				? require('httpolyglot').createServer(sslOpts, app)
-				: require('https').createServer(sslOpts, app);
+				? httpolyglot.createServer(sslOpts, app)
+				: https.createServer(sslOpts, app);
 		} else {
-			server = require('http').createServer(app);
+			server = http.createServer(app);
 		}
 
 		/**
@@ -292,7 +295,7 @@ export default class NodeCGServer extends TypedEmitter<EventMap> {
 
 		// Fallthrough error handler,
 		// Taken from https://docs.sentry.io/platforms/node/express/
-		app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+		app.use((err: unknown, _req: express.Request, res: express.Response) => {
 			res.statusCode = 500;
 			if (global.sentryEnabled) {
 				// The error id is attached to `res.sentry` to be returned

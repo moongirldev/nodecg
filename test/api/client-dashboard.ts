@@ -20,7 +20,7 @@ test.serial("should produce an error if a callback isn't given", (t) => {
 	const error = t.throws(() => {
 		t.context.apis.extension.listenFor(
 			'testMessageName',
-			// @ts-expect-error
+			// @ts-expect-error We're testing what happens when we don't provide a callback.
 			'test',
 		);
 	});

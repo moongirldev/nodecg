@@ -63,6 +63,7 @@ class UtilScrollable extends Polymer.PolymerElement {
 		this.classList.toggle(
 			'scrolled-to-bottom',
 
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			this.scrollTarget.scrollTop + this.scrollTarget.offsetHeight >= this.scrollTarget.scrollHeight,
 		);
 	}

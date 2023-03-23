@@ -108,29 +108,24 @@ test.serial('loader - should detect and load bundle located in custom bundle pat
 test.serial('watcher - should emit a change event when the manifest file changes', async (t) => {
 	t.plan(1);
 
-	// eslint-disable-next-line no-async-promise-executor
-	await new Promise<void>(async (resolve) => {
-		let handled = false;
-		const manifest = JSON.parse(fs.readFileSync(`${tempFolder}/bundles/change-manifest/package.json`, 'utf8'));
+	let handled = false;
+	const manifest = JSON.parse(fs.readFileSync(`${tempFolder}/bundles/change-manifest/package.json`, 'utf8'));
 
-		bundleManager.once('bundleChanged', (bundle) => {
-			if (handled) return;
-			handled = true;
-			t.is(bundle.name, 'change-manifest');
-			resolve();
-		});
-
-		bundleManager.once('invalidBundle', (bundle, error) => {
-			if (handled) return;
-			handled = true;
-			t.fail(`Received an "invalid-bundle" event for bundle "${bundle.name}": ${error.message}`);
-			resolve();
-		});
-
-		manifest._changed = true;
-		await sleep(100);
-		fs.writeFileSync(`${tempFolder}/bundles/change-manifest/package.json`, JSON.stringify(manifest), 'utf8');
+	bundleManager.once('bundleChanged', (bundle) => {
+		if (handled) return;
+		handled = true;
+		t.is(bundle.name, 'change-manifest');
 	});
+
+	bundleManager.once('invalidBundle', (bundle, error) => {
+		if (handled) return;
+		handled = true;
+		t.fail(`Received an "invalid-bundle" event for bundle "${bundle.name}": ${error.message}`);
+	});
+
+	manifest._changed = true;
+	await sleep(100);
+	fs.writeFileSync(`${tempFolder}/bundles/change-manifest/package.json`, JSON.stringify(manifest), 'utf8');
 });
 
 test.serial('watcher - should remove the bundle when the manifest file is renamed', async (t) => {

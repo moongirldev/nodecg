@@ -50,16 +50,14 @@ export function stringifyErrorInner(error: unknown): {
 				// Try to stringify the object:
 				message = JSON.stringify(error);
 			} catch (e: unknown) {
-				// eslint-disable-next-line @typescript-eslint/no-base-to-string
-				message = `${error} (stringifyError: ${e})`;
+				message = `${String(error)} (stringifyError: ${String(e)})`;
 			}
 		}
 	} else {
-		// eslint-disable-next-line @typescript-eslint/no-base-to-string
-		message = `${error}`;
+		message = String(error);
 	}
 
-	message = `${message}`;
+	message = String(message);
 
 	return {
 		message,

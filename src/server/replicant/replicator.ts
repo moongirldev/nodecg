@@ -179,7 +179,6 @@ export default class Replicator {
 			return;
 		}
 
-		let databaseSaveInProgress = false;
 		let valueChangedDuringSave = false;
 
 		// Return the promise so that it can still be awaited
@@ -274,7 +273,7 @@ export default class Replicator {
 					schema: replicant.schema,
 					schemaSum: replicant.schemaSum,
 				});
-				// eslint-disable-next-line @typescript-eslint/no-implicit-any-catch
+
 			} catch (e: any) {
 				if (e.message.startsWith('Invalid value rejected for replicant')) {
 					cb(e.message, undefined);

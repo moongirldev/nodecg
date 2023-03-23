@@ -28,7 +28,7 @@ test('should throw an error when pkg.nodecg.assetCategories is not an Array', (t
 	const error = t.throws(() =>
 		parseAssets({
 			name: 'test-bundle',
-			// @ts-expect-error
+			// @ts-expect-error - We're testing an invalid value
 			assetCategories: 'foo',
 		}),
 	);
@@ -41,7 +41,7 @@ test('should throw an error when an assetCategory lacks a name', (t) => {
 	const error = t.throws(() =>
 		parseAssets({
 			name: 'test-bundle',
-			// @ts-expect-error
+			// @ts-expect-error - We're testing an invalid value
 			assetCategories: [{}],
 		}),
 	);
@@ -54,7 +54,7 @@ test('should throw an error when an assetCategory lacks a title', (t) => {
 	const error = t.throws(() =>
 		parseAssets({
 			name: 'test-bundle',
-			// @ts-expect-error
+			// @ts-expect-error - We're testing an invalid value
 			assetCategories: [{ name: 'category' }],
 		}),
 	);
@@ -71,7 +71,7 @@ test("should throw an error when an assetCategory's allowedTypes isn't an array"
 				{
 					name: 'category',
 					title: 'Category',
-					// @ts-expect-error
+					// @ts-expect-error - We're testing an invalid value
 					allowedTypes: 'foo',
 				},
 			],
@@ -86,7 +86,7 @@ test('should throw an error when an assetCategory is named "sounds"', (t) => {
 	const error = t.throws(() =>
 		parseAssets({
 			name: 'test-bundle',
-			// @ts-expect-error
+			// @ts-expect-error - We're testing an invalid value
 			assetCategories: [{ name: 'Sounds' }],
 		}),
 	);

@@ -139,7 +139,7 @@ class NcgWorkspace extends Polymer.PolymerElement {
 		this.$.loadingSpinner.active = false;
 		this.applyPackery();
 		setTimeout(() => {
-			this.addEventListener('tap', this.shiftPackery);
+			this.addEventListener('tap', this.shiftPackery.bind(this));
 			this.$.panels.style.opacity = 1;
 			this.$.panels.style.transform = 'translateY(0)';
 			this.$.panels.style.pointerEvents = 'auto';

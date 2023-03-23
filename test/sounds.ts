@@ -148,11 +148,11 @@ test.serial('mixer - assignable cues - should list new sound Assets as they are 
 	const ret = await dashboard.evaluate(
 		async () =>
 			new Promise<string | void>((resolve) => {
-				const el = (document as any)
+				const el = document
 					.querySelector('ncg-dashboard')
-					.shadowRoot.querySelector('ncg-mixer')
-					.shadowRoot.querySelector('ncg-sounds[bundle-name="test-bundle"]')
-					.shadowRoot.querySelector('ncg-sound-cue:nth-child(1)').$.select.$.select;
+					?.shadowRoot?.querySelector('ncg-mixer')
+					?.shadowRoot?.querySelector('ncg-sounds[bundle-name="test-bundle"]')
+					?.shadowRoot?.querySelector('ncg-sound-cue:nth-child(1)')?.$.select.$.select;
 
 				if (!el) {
 					resolve('NoSuchElement');
@@ -200,7 +200,8 @@ test.serial('client api - #stopSound should stop all instances of a cue', async 
 		window.graphicApi.playSound('default-file');
 		window.graphicApi.playSound('default-file');
 		window.graphicApi.stopSound('default-file');
-		return (window as any).createjs.Sound._instances.length;
+		// @ts-expect-error _instances is private
+		return window.createjs.Sound._instances.length;
 	});
 
 	t.is(ret, 0);
@@ -211,7 +212,8 @@ test.serial('client api - #stopAllSounds should stop all instances', async (t) =
 		window.graphicApi.playSound('default-file');
 		window.graphicApi.playSound('default-file');
 		window.graphicApi.stopAllSounds();
-		return (window as any).createjs.Sound._instances.length;
+		// @ts-expect-error _instances is private
+		return window.createjs.Sound._instances.length;
 	});
 
 	t.is(ret, 0);
